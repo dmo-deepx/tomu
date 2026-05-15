@@ -311,7 +311,7 @@ static const char* usb_strings[NUM_USB_STRINGS] = {
 	"Tomu", // Manufacturer
 	"CDC-NCM Demo", // Product
 	"DEMO", // SerialNumber
-	"4CFCAA123BEB", // MAC Address - for testing purposes only!
+	"42FCAA123BEB", // MAC Address
 	"CDC-NCM Interface", // CDC NCM control interface name
 	"CDC-NCM Data Dummy", // CDC NCM data (first alternate) interface name
 	"CDC-NCM Data" // CDC NCM data (second alternate) interface name
@@ -371,7 +371,7 @@ static const uint8_t ntb_parameters[0x1C] = {
 static uint32_t g_ntb_in_max_size = 2048;
 
 // MAC Address in network byte order
-static uint8_t g_mac_address[6] = {0x4C, 0xFC, 0xAA, 0x12, 0x3B, 0xEB};
+static uint8_t g_mac_address[6] = {0x42, 0xFC, 0xAA, 0x12, 0x3B, 0xEB};
 static uint8_t g_server_mac_address[6] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x01};
 // Default IP addresses for host NIC and "remote server" we simulate.
 static uint8_t g_host_ip_address[4] = {192, 168, 7, 2}; // Used to send UDP stats packet
@@ -469,8 +469,8 @@ static enum usbd_request_return_codes cdc_control_request(usbd_device *usbd_dev,
 }
 
 /* Internet checksum (RFC 1071 / RFC 791)
- * Used for IPv4 header, ICMP, and (if needed later) UDP/TCP.
- * The caller must zero the checksum field before calling.
+ * Used for IPv4 header, ICMP.
+ * The checksum field itself is part of the input buffer, it must be set to zero before calling this function.
  */
 static uint16_t internet_checksum(const uint8_t *buf, size_t len)
 {
@@ -490,7 +490,9 @@ static uint16_t internet_checksum(const uint8_t *buf, size_t len)
     return ~sum;
 }
 
-/* TCP checksum (RFC 793) — pseudo-header + TCP header/data */
+/* TCP checksum (RFC 793) — pseudo-header + TCP header/data
+ * The checksum field itself is part of the input buffer, it must be set to zero before calling this function.
+ */
 static uint16_t tcp_checksum(const uint8_t *tcp_buf, uint16_t tcp_len,
                              const uint8_t *src_ip, const uint8_t *dst_ip)
 {
