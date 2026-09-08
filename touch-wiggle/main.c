@@ -40,7 +40,8 @@
  * iterating (just re-plug). Switch to TOBOOT_CONFIG_FLAG_AUTORUN once you're
  * happy and want it to start automatically on insert. */
 #include <toboot.h>
-TOBOOT_CONFIGURATION(0);
+// TOBOOT_CONFIGURATION(0);
+TOBOOT_CONFIGURATION(TOBOOT_CONFIG_FLAG_AUTORUN);
 
 /* Systick interrupt frequency, Hz */
 #define SYSTICK_FREQUENCY 100

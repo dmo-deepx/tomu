@@ -50,3 +50,8 @@
 *.swp
 *.swo
 *~
+
+# Local secret keystroke payload (not checked in)
+touch-keyboard/secret.h
+
+.claude
